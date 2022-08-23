@@ -14,7 +14,8 @@ public class Calculator_main {
             switch (showMenu()) {
                 case 1:
 //                    calc(inputString());
-                    calc("9-8*(-6+8)-7+(3/3)");
+//                    calc("9-8*(-6+8)-7+(3/3)");
+                    System.out.println(calc("1+2-3+4-5+6-7+8"));
                     break;
                 case 0:
                     flag = false;
@@ -39,7 +40,7 @@ public class Calculator_main {
         return str;
     }
 
-    public static void calc(String str) throws IOException {
+    public static double calc(String str) throws IOException {
         String s = str.replaceAll("\\s", "");//удаляю все пробельные символы
 /*
 здесь должна быть проверка на дурака - можно вводить только цифры и знаки арифметических операций
@@ -65,7 +66,58 @@ public class Calculator_main {
             } else listForCalculation.add(chars[i] + "");
         }
         System.out.println(listForCalculation);
+        double result;
+//        LinkedList<Integer> index = new LinkedList<>();
+        //перезагрузился и начал с новыми силами
+        int index = 0;
+        double firstToken = Double.parseDouble(listForCalculation.get(index++));
+
+        while (index < listForCalculation.size()) {
+            String operator = listForCalculation.get(index);
+            if (!operator.equals("+") && !operator.equals("-")) {
+                break;
+            } else {
+                index++;
+            }
+            double secondToken = Double.parseDouble(listForCalculation.get(index++));
+            if (operator.equals("+")) {
+                firstToken += secondToken;
+            } else {
+                firstToken -= secondToken;
+            }
+
+
+        }
+        result=firstToken;
+
+return result;
+
+//        listForCalculation.stream().filter(x -> x == "(").peek(x -> index.add(listForCalculation.indexOf(x)));
+//        System.out.println(index);
+//        if (listForCalculation.contains("(")){
+//
+//        }
+
+//        for (int i = 0; i < listForCalculation.size(); i++) {
+//            switch (listForCalculation.get(i)) {
+//                case "(":
+//
+//                case ")":
+//
+//                case "*":
+//                    double temp = Double.parseDouble(listForCalculation.get(i)) * Double.parseDouble(listForCalculation.get(i) + 1);
+//
+//                case "/":
+//
+//                case "+":
+//
+//                case "-":
+//
+//
+//            }
+//        }
+
     }
 
-
 }
+
