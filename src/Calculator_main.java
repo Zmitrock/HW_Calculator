@@ -2,24 +2,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Calculator_main {
     public static BufferedReader reader = new BufferedReader((new InputStreamReader(System.in)));
     public static LinkedList<String> listForCalculation = new LinkedList<String>();
     public static int index = 0;
+    public static String s;
 
     public static void main(String[] args) throws IOException {
         boolean flag = true;
         while (flag) {
             switch (showMenu()) {
                 case 1:
-//                    calc(inputString());
-//                    calc("9-8*(-6+8)-7+(3/3)");
-//                    1.0*2,0-3+4,0/5+6-7.0*8"
-                    stringTransform("1+2*(3-4)+6/7.0");
-                    System.out.println(calc());
+                    stringTransform(inputString());
+                    System.out.println(s+" = "+calc());
                     break;
                 case 0:
                     flag = false;
@@ -28,7 +24,6 @@ public class Calculator_main {
                     System.out.println("Некорректный ввод. Выберите действие");
             }
         }
-
     }
 
     private static int showMenu() throws IOException {
@@ -45,9 +40,26 @@ public class Calculator_main {
     }
 
     public static LinkedList<String> stringTransform(String str) {
-        String s = str.replaceAll("\\s", "");//удаляю все пробельные символы
+         s = str.replaceAll("\\s", "");//удаляю все пробельные символы
+        int temp =0;
+        for (int i = 0; i <s.length() ; i++) {
+            if(s.charAt(i)<40 ||s.charAt(i)>57 ){
+                char c = s.charAt(i);
+                temp++;
+               s= s.replace(c+"","");
+            }
+        }
+        if(temp>0){
+            System.err.println("Введенная строка, содержала некорректные символы. Для расчета они были удалены");
+        }
+//regex - боль
+//        if (s.matches("[^\\d\\.\\,\\*/\\+\\-\\(\\)]")) {
+//            System.out.println("есть некорректные символы в строке");
+//
+//        }
+
 /*
-здесь должна быть проверка на дурака - можно вводить только цифры и знаки арифметических операций
+здесь должна быть проверка на некорректные символы  - можно вводить только цифры и знаки арифметических операций
  */
         System.out.println("выражение " + s);
 
@@ -72,15 +84,12 @@ public class Calculator_main {
                 i = i + count;
             } else listForCalculation.add(chars[i] + "");
         }
-        System.out.println(listForCalculation);
+        System.out.println("Список для расчета: " + listForCalculation);
         return listForCalculation;
     }
 
     public static double calc() throws IOException {
-        //        LinkedList<Integer> index = new LinkedList<>();
-        //перезагрузился и начал с новыми силами
-        double firstToken = nultiply();
-
+        double firstToken = multiply();
         while (index < listForCalculation.size()) {
             String operator = listForCalculation.get(index);
             if (!operator.equals("+") && !operator.equals("-")) {
@@ -88,7 +97,7 @@ public class Calculator_main {
             } else {
                 index++;
             }
-            double secondToken = nultiply();
+            double secondToken = multiply();
             if (operator.equals("+")) {
                 firstToken += secondToken;
             } else {
@@ -96,11 +105,9 @@ public class Calculator_main {
             }
         }
         return firstToken;
-
-
     }
 
-    public static double nultiply() throws IOException {
+    public static double multiply() throws IOException {
         double firstToken = factor();
 
         while (index < listForCalculation.size()) {
@@ -128,46 +135,19 @@ public class Calculator_main {
             result = calc();
             String closingScope;
             if (index < listForCalculation.size()) {
-    closingScope = listForCalculation.get(index);
-            }else{
-            throw new IllegalArgumentException("Нет закрывающей скобки");
+                closingScope = listForCalculation.get(index);
+            } else {
+                throw new IllegalArgumentException("Нет закрывающей скобки");
             }
-            if(closingScope.equals(")")){
+            if (closingScope.equals(")")) {
                 index++;
                 return result;
             }
-            throw new IllegalArgumentException("')' ожидалась, но найдено "+closingScope);
+            throw new IllegalArgumentException("')' ожидалась, но найдено " + closingScope);
         }
         index++;
         return Double.parseDouble(next);
     }
-
-
-//        listForCalculation.stream().filter(x -> x == "(").peek(x -> index.add(listForCalculation.indexOf(x)));
-//        System.out.println(index);
-//        if (listForCalculation.contains("(")){
-//
-//        }
-
-//        for (int i = 0; i < listForCalculation.size(); i++) {
-//            switch (listForCalculation.get(i)) {
-//                case "(":
-//
-//                case ")":
-//
-//                case "*":
-//                    double temp = Double.parseDouble(listForCalculation.get(i)) * Double.parseDouble(listForCalculation.get(i) + 1);
-//
-//                case "/":
-//
-//                case "+":
-//
-//                case "-":
-//
-//
-//            }
-//        }
-
 
 }
 
