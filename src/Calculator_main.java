@@ -15,7 +15,7 @@ public class Calculator_main {
                 case 1:
 //                    calc(inputString());
 //                    calc("9-8*(-6+8)-7+(3/3)");
-                    System.out.println(calc("1+2-3+4-5+6-7+8"));
+                    System.out.println(calc("1.0+2,0-3+4-5+6-7+8"));
                     break;
                 case 0:
                     flag = false;
@@ -57,7 +57,11 @@ public class Calculator_main {
                     if (Character.isDigit(chars[j])) {
                         number = number + chars[j];
                         count++;
-                    } else {
+                    } else if (chars[j]==46 || chars[j]==44){
+                        number = number + ".";
+                        count++;
+                    }
+                    else{
                         break;
                     }
                 }
