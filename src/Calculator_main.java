@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 public class Calculator_main {
     public static BufferedReader reader = new BufferedReader((new InputStreamReader(System.in)));
+    public static LinkedList<String> listForCalculation = new LinkedList<String>();
+    public static int index = 0;
 
     public static void main(String[] args) throws IOException {
         boolean flag = true;
@@ -15,7 +17,8 @@ public class Calculator_main {
                 case 1:
 //                    calc(inputString());
 //                    calc("9-8*(-6+8)-7+(3/3)");
-                    System.out.println(calc("1.0+2,0-3+4-5+6-7+8"));
+                    stringTransform("1.0*2,0-3+4,0/5+6-7.0*8");
+                    System.out.println(calc());
                     break;
                 case 0:
                     flag = false;
@@ -40,13 +43,13 @@ public class Calculator_main {
         return str;
     }
 
-    public static double calc(String str) throws IOException {
+    public static LinkedList<String> stringTransform(String str) {
         String s = str.replaceAll("\\s", "");//удаляю все пробельные символы
 /*
 здесь должна быть проверка на дурака - можно вводить только цифры и знаки арифметических операций
  */
         System.out.println("выражение " + s);
-        LinkedList<String> listForCalculation = new LinkedList<String>();
+
         String number = "";
         char[] chars = s.toCharArray();
         for (int i = 0; i < chars.length; i++) {
@@ -57,11 +60,10 @@ public class Calculator_main {
                     if (Character.isDigit(chars[j])) {
                         number = number + chars[j];
                         count++;
-                    } else if (chars[j]==46 || chars[j]==44){
+                    } else if (chars[j] == 46 || chars[j] == 44) {
                         number = number + ".";
                         count++;
-                    }
-                    else{
+                    } else {
                         break;
                     }
                 }
@@ -70,11 +72,13 @@ public class Calculator_main {
             } else listForCalculation.add(chars[i] + "");
         }
         System.out.println(listForCalculation);
-        double result;
-//        LinkedList<Integer> index = new LinkedList<>();
+        return listForCalculation;
+    }
+
+    public static double calc() throws IOException {
+        //        LinkedList<Integer> index = new LinkedList<>();
         //перезагрузился и начал с новыми силами
-        int index = 0;
-        double firstToken = Double.parseDouble(listForCalculation.get(index++));
+        double firstToken = nultiply();
 
         while (index < listForCalculation.size()) {
             String operator = listForCalculation.get(index);
@@ -83,18 +87,40 @@ public class Calculator_main {
             } else {
                 index++;
             }
-            double secondToken = Double.parseDouble(listForCalculation.get(index++));
+            double secondToken = nultiply();
             if (operator.equals("+")) {
                 firstToken += secondToken;
             } else {
                 firstToken -= secondToken;
             }
-
-
         }
-        result=firstToken;
+        return firstToken;
 
-return result;
+
+    }
+
+    public static double nultiply() throws IOException {
+        double firstToken = Double.parseDouble(listForCalculation.get(index++));
+
+        while (index < listForCalculation.size()) {
+            String operator = listForCalculation.get(index);
+            if (!operator.equals("*") && !operator.equals("/")) {
+                break;
+            } else {
+                index++;
+            }
+            double secondToken = Double.parseDouble(listForCalculation.get(index++));
+            if (operator.equals("*")) {
+                firstToken *= secondToken;
+            } else {
+                firstToken /= secondToken;
+            }
+        }
+        return firstToken;
+
+
+    }
+
 
 //        listForCalculation.stream().filter(x -> x == "(").peek(x -> index.add(listForCalculation.indexOf(x)));
 //        System.out.println(index);
@@ -121,7 +147,6 @@ return result;
 //            }
 //        }
 
-    }
 
 }
 
