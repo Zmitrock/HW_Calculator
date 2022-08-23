@@ -17,7 +17,8 @@ public class Calculator_main {
                 case 1:
 //                    calc(inputString());
 //                    calc("9-8*(-6+8)-7+(3/3)");
-                    stringTransform("1.0*2,0-3+4,0/5+6-7.0*8");
+//                    1.0*2,0-3+4,0/5+6-7.0*8"
+                    stringTransform("1+2*(3-4)+6/7.0");
                     System.out.println(calc());
                     break;
                 case 0:
@@ -100,7 +101,7 @@ public class Calculator_main {
     }
 
     public static double nultiply() throws IOException {
-        double firstToken = Double.parseDouble(listForCalculation.get(index++));
+        double firstToken = factor();
 
         while (index < listForCalculation.size()) {
             String operator = listForCalculation.get(index);
@@ -109,7 +110,7 @@ public class Calculator_main {
             } else {
                 index++;
             }
-            double secondToken = Double.parseDouble(listForCalculation.get(index++));
+            double secondToken = factor();
             if (operator.equals("*")) {
                 firstToken *= secondToken;
             } else {
@@ -117,8 +118,28 @@ public class Calculator_main {
             }
         }
         return firstToken;
+    }
 
-
+    public static double factor() throws IOException {
+        String next = listForCalculation.get(index);
+        double result;
+        if (next.equals("(")) {
+            index++;
+            result = calc();
+            String closingScope;
+            if (index < listForCalculation.size()) {
+    closingScope = listForCalculation.get(index);
+            }else{
+            throw new IllegalArgumentException("Нет закрывающей скобки");
+            }
+            if(closingScope.equals(")")){
+                index++;
+                return result;
+            }
+            throw new IllegalArgumentException("')' ожидалась, но найдено "+closingScope);
+        }
+        index++;
+        return Double.parseDouble(next);
     }
 
 
